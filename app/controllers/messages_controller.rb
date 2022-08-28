@@ -2,7 +2,10 @@ class MessagesController < ApplicationController
   before_action :authenticate_user!, only: ["index"]
 
   def index
-    messages = Message.all
+    # :user_メッセージに紐づくユーザーの一覧を取得
+    # [likes:]_メッセージに紐づくいいねの一覧を取得
+    # [likes: :user]_likes:に紐づくユーザーの一覧を取得
+    messages = Message.includes(:user, [likes: :user])
     # オブジェクトを作成し、格納していく
     messages_array = messages.map do |message|
       {
@@ -16,6 +19,6 @@ class MessagesController < ApplicationController
       }
     end
 
-    render json: messages_array, status: 200
+    render json: messages_array, status: ok
   end
 end
